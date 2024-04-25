@@ -1,73 +1,129 @@
-const apiKey = '8d6454a89dff871786a0307b0dbebbee'
-async function fetchWeatherData(city) {
-    try {
-        const response = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
-        );
 
-        if (!response.ok) {
-            throw new Error("Unable to fetch weather data");
-        }
-        const data = await response.json();
-        console.log(data);
-        updateWeatherUI(data);
-    } catch (error) {
-        console.error(error);
-    }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-const cityElement = document.querySelector(".city");
-const temperature = document.querySelector(".temp");
-const windSpeed = document.querySelector(".wind-speed");
-const humidity = document.querySelector(".humidity");
-const visibility = document.querySelector(".visibility-distance");
-
-const descriptionText = document.querySelector(".description-text");
-const date = document.querySelector(".date");
-const descriptionIcon = document.querySelector(".description i");
-
-// fetchWeatherData();
-
-function updateWeatherUI(data) {
-    cityElement.textContent = data.name;
-    temperature.textContent = `${Math.round(data.main.temp)}`;
-    windSpeed.textContent = `${data.wind.speed} km/h`;
-    humidity.textContent = `${data.main.humidity}%`;
-    visibility.textContent = `${data.visibility / 1000} km`;
-    descriptionText.textContent = data.weather[0].description;
-
-    const currentDate = new Date();
-    date.textContent = currentDate.toDateString();
-    const weatherIconName = getWeatherIconName(data.weather[0].main);
-    descriptionIcon.innerHTML = `<i class="material-icons">${weatherIconName}</i>`;
+body {
+    background-color: hsl(204, 86%, 23%);
+    font-family: Arial, Helvetica, sans-serif;
+    height: 100vh;
 }
 
-const formElement = document.querySelector(".search-form");
-const inputElement = document.querySelector(".city-input");
+.weather-app {
+    background-color: white;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 15px;
+}
 
-formElement.addEventListener("submit", function (e) {
-    e.preventDefault();
+.search-form {
+    display: flex;
+    align-items: center;
+}
 
-    const city = inputElement.value;
-    if (city !== "") {
-        fetchWeatherData(city);
-        inputElement.value = "";
-    }
-});
+input[type="text"] {
+    flex: 1;
+    padding: 20px;
+    border: 2px solid #3498db;
+    border-radius: 15px;
+    font-size: 1rem;
+    height: 3.5rem;
+}
 
-function getWeatherIconName(weatherCondition) {
-    const iconMap = {
-        Clear: "wb_sunny",
-        Clouds: "wb_cloudy",
-        Rain: "umbrella",
-        Thunderstorm: "flash_on",
-        Drizzle: "grain",
-        Snow: "ac_unit",
-        Mist: "cloud",
-        Smoke: "cloud",
-        Haze: "cloud",
-        Fog: "cloud",
-    };
+.search-btn {
+    background-color: #3498db;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    color: white;
+    margin-left: 10px;
+    transition: backgroung-color 0.3s ease;
+}
 
-    return iconMap[weatherCondition] || "help";
+.search-btn:hover {
+    background-color: #2980b9;
+}
+
+.city-date-section {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.city-date-section .city {
+    font-size: 2rem;
+    opacity: 0.9;
+}
+
+.city-date-section .date {
+    background-color: #c3eaf4;
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+
+.temperature-info {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.temperature-info .temp {
+    font-size: 10rem;
+}
+
+.temperature-info .description {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.temperature-info .description i {
+    font-size: 1.5rem;
+    opacity: 0.8;
+}
+
+.temperature-info .description span {
+    font-size: 1.5rem;
+}
+
+.additional-info {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.wind-info,
+.humidity-info,
+.visibility-info {
+    background-color: #ecf0f1;
+    width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 15px;
+    border-radius: 15px;
+    padding: 30px 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.additional-info .material-icons {
+    font-size: 3rem;
+    opacity: 0.8;
+}
+
+.wind-info div,
+.humidity-info div,
+.visibility-info div {
+    text-align: center;
 }
